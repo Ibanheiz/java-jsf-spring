@@ -29,7 +29,7 @@ public class ClienteMB implements Serializable {
     private List<Cliente> clientes = new ArrayList<>();
     private Cliente cliente = new Cliente();
     private Cliente selectedCliente;
-    String mensagem = "";
+    private String mensagem = "";
 
     @PostConstruct
     public void init() {
