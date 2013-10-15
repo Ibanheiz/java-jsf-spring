@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Template</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <p:growl id="messages" life="3500" showDetail="true" globalOnly="true" autoUpdate="true" />
+
+            <p:confirmDialog  header="Atenção!" message="Deseja realmente excluir o cliente?" showEffect="fade" widgetVar="confirmDialogCliente">  
+                <p:commandButton value="Não" type="button" onclick="confirmDialogCliente.hide();" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+                <p:commandButton actionListener="#{clienteMB.excluir(clienteMB.selectedCliente)}" update=":frm:tblCliente" oncomplete="confirmDialogCliente.hide()" value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+            </p:confirmDialog>
+
+            <p:layout fullPage="true">
+
+                <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
+                    <div style="margin: 20px 0 0 30px;">
+                        <h:outputText value="Controle de Clientes" style="font: 35px verdana; color: #f00; font-weight: bold; " />
+                    </div>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
+                    <div style="margin: 20px 0 0 30px;">
+                        <h:outputText value="Autor: Nicolas Ibanheiz" style="font: 20px verdana; color: #f00; font-weight: bold; " />
+                    </div>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="west" size="175" header="Menu" collapsible="true">
+                    <p:menu>
+                        <p:submenu label="Principal">
+                            <p:menuitem value="Home" url="#" />
+                            <p:menuitem value="Clientes" url="#" />
+                            <p:menuitem value="Processos" url="#" />
+                            <p:menuitem value="Agenda" url="#" />
+                            <p:menuitem value="Caixa" url="#" />
+                        </p:submenu>
+                    </p:menu>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <h:form id="frm" prependId="false">
+                        <h:panelGroup id="pnlCliente">
+                            <h:panelGrid columns="3" cellpadding="0" cellspacing="8">
+                                <h:column>
+                                    <h:outputText value="Nome" />
+                                </h:column>
+                                <h:column>
+                                    <p:inputText id="txtNome" value="#{clienteMB.cliente.nome}" required="#{param['cadastrar']}" requiredMessage="Digite o nome" />
+                                </h:column>
+                                <h:column>
+                                    <p:message for="txtNome"  />  
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="RG" />
+                                </h:column>
+                                <h:column>
+                                    <p:inputText id="txtRg" value="#{clienteMB.cliente.rg}" required="#{param['cadastrar']}" requiredMessage="Digite o RG"/>
+                                </h:column>
+                                <h:column>
+                                    <p:message for="txtRg" />  
+                                </h:column>
+                                <h:column>
+                                    <p:commandButton actionListener="#{clienteMB.salvar}" value="Salvar" update="tblCliente pnlCliente" icon="ui-icon-disk" >
+                                        <f:param name="cadastrar" value="true" />
+                                    </p:commandButton>
+                                </h:column>
+                                <h:column>
+                                    <p:commandButton actionListener="#{clienteMB.cancelar}" value="Cancelar" update="tblCliente pnlCliente" icon="ui-icon-close" />
+                                </h:column>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                        <br/>
+                        <p:dataTable id="tblCliente" value="#{clienteMB.clientes}" var="cliente" rows="3" paginatorAlwaysVisible="false" paginator="true" paginatorPosition="bottom" emptyMessage="Não há clientes no momento." style="width: 600px;">
+                            <p:column style="width: 50px;">
+                                <f:facet name="header">
+                                    <h:outputText value="Alterar" />
+                                </f:facet>
+                                <p:commandButton actionListener="#{clienteMB.editar(cliente)}" update=":frm:pnlCliente :frm:tblCliente" icon="ui-icon-pencil" style="margin-left:8px;" />
+                            </p:column>
+                            <p:column style="width: 50px;">
+                                <f:facet name="header">
+                                    <h:outputText value="Excluir" />
+                                </f:facet>
+                                <p:commandButton onclick="confirmDialogCliente.show();" icon="ui-icon-trash" style="margin-left:8px;" >
+                                    <f:setPropertyActionListener value="#{cliente}" target="#{clienteMB.selectedCliente}" />
+                                </p:commandButton>
+
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="ID" />
+                                </f:facet>
+                                <div style="text-align: center">
+                                    <h:outputText value="#{cliente.id}" />
+                                </div>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Nome" />
+                                </f:facet>
+                                <h:outputText value="#{cliente.nome}" />
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="RG" />
+                                </f:facet>
+                                <h:outputText value="#{cliente.rg}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:layoutUnit>
+
+            </p:layout>
+        </h:body>
+
+
+    </f:view>
+</html>
+
