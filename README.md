@@ -1,4 +1,4 @@
 template
 ========
 
-Demo com JPA + Eclipslink, Spring, Spring Security, Managed Bean, JUnit, Mockito.
+Demo com JPA + Hibernate, JSF, Spring no Mysql Server.
